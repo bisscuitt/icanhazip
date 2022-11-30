@@ -1,5 +1,4 @@
 //! Default Compute@Edge template program.
-
 use fastly::http::{header, Method, StatusCode};
 use fastly::{mime, Error, Request, Response};
 
@@ -55,10 +54,12 @@ fn main(req: Request) -> Result<Response, Error> {
             // let mut endpoint = fastly::log::Endpoint::from_name("my_endpoint");
             // writeln!(endpoint, "Hello from the edge!").unwrap();
 
+            let ip = req.get_client_ip_addr().unwrap();
+
             // Send a default synthetic response.
             Ok(Response::from_status(StatusCode::OK)
                 .with_content_type(mime::TEXT_HTML_UTF_8)
-                .with_body(include_str!("welcome-to-compute@edge.html")))
+                .with_body(ip.to_string()))
         }
 
         // Catch all other requests and return a 404.
